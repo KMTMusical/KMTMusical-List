@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>KMT Musical’s Trading List</title>
+<style>
+:root{--spring:cubic-bezier(.32,1.35,.45,1);--bg:#fff;--card:#f4f5f7;--text:#1a1c20;--sub:#1a1c20;--line:#e5e7eb;--blue:#2563eb;--bubble:#1f2937;--sheet:#fff;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#111214;--card:#1c1e22;--text:#f1f2f4;--sub:#f1f2f4;--line:#2b2e34;--bubble:#3a3d44;--sheet:#17181b;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#111214;--card:#1c1e22;--text:#f1f2f4;--sub:#f1f2f4;--line:#2b2e34;--bubble:#3a3d44;--sheet:#17181b;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Pretendard","Noto Sans KR",Helvetica,Arial,sans-serif}
+header{padding:28px 16px 0;max-width:640px;margin:0 auto}
+h1{font-size:22px;margin:0 0 12px;letter-spacing:-.3px}
+header p{margin:0 0 10px;color:var(--text);font-size:14px;line-height:1.6}
+header p.hi{color:var(--text);font-weight:700;font-size:16px;margin-top:6px}
+.rules{margin-top:14px;padding:20px}
+.rules .rt{font-weight:700;font-size:15px}
+.rules ol,.rules ul{margin:12px 0 0;padding-left:20px;font-size:13.5px;line-height:1.65}
+.rules li{margin-bottom:8px}
+#sw{position:relative;margin-top:14px}
+#sw svg{position:absolute;left:18px;top:50%;transform:translateY(-50%);color:var(--sub)}
+#q{width:100%;border:0;border-radius:999px;padding:16px 20px 16px 46px;font-size:16px;background:var(--card);color:var(--text);outline:none;box-shadow:none;font-family:inherit}
+#q:focus{box-shadow:0 0 0 2px var(--blue)}
+#q::placeholder{color:var(--text);opacity:1}
+main{max-width:640px;margin:0 auto;padding:14px 16px 120px;display:grid;gap:14px}
+.card{background:var(--card);border-radius:28px;padding:20px}
+.title{font-weight:700;font-size:17px}
+.meta{color:var(--text);font-size:14px;font-weight:400;line-height:1.65;margin:4px 0 12px}
+.cast{font-size:14px;line-height:1.65;margin:0 0 10px}
+.cast b{font-weight:400}
+.cast+.add{margin-top:6px}
+.note{white-space:pre-line;font-size:14px;font-weight:400;color:var(--text);margin:0 0 16px;line-height:1.65}
+.add{width:100%;border:0;border-radius:999px;padding:16px;font-size:14px;font-weight:700;letter-spacing:.8px;background:var(--blue);color:#fff;cursor:pointer}
+.add.lock{background:var(--line);color:var(--text);opacity:.55;cursor:not-allowed;box-shadow:none}
+.add.lock:active{transform:none}
+.add.on{background:transparent;color:var(--blue);box-shadow:inset 0 0 0 2px var(--blue)}
+.add{transition:transform .6s var(--spring),background .3s,color .3s,box-shadow .3s}
+.add:active,.copy:active,.x:active,.rm:active,#cpmail:active{transform:scale(.86)}
+.copy,.x,.rm,#cpmail{transition:transform .6s var(--spring)}
+#bubble{position:fixed;left:16px;right:16px;max-width:608px;margin:0 auto;bottom:calc(env(safe-area-inset-bottom,0px) + 8px);z-index:20;display:flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:999px;padding:17px 20px;background:var(--bubble);color:#fff;font-size:14px;font-weight:700;box-shadow:0 6px 20px rgba(0,0,0,.22);cursor:pointer;transition:background .35s,transform .6s var(--spring)}
+#bubble.on{background:var(--blue)}
+#bubble:active{transform:scale(.9)}
+#bubble.bump{animation:bump .9s var(--spring)}
+body::after{content:"";position:fixed;left:0;right:0;bottom:0;height:calc(env(safe-area-inset-bottom,0px) + 96px);z-index:15;pointer-events:none;background:linear-gradient(to top,var(--bg) 25%,transparent);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);-webkit-mask-image:linear-gradient(to top,#000 55%,transparent);mask-image:linear-gradient(to top,#000 55%,transparent)}
+#bubble .n{background:rgba(255,255,255,.25);border-radius:999px;min-width:22px;height:22px;display:grid;place-items:center;font-size:12px;padding:0 6px}
+#back{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:30;opacity:0;pointer-events:none;transition:opacity .4s ease}
+#sheet{position:fixed;left:0;right:0;bottom:0;z-index:40;background:var(--sheet);border-radius:28px 28px 0 0;max-height:80%;display:flex;flex-direction:column;transform:translateY(112%);visibility:hidden;box-shadow:0 120px 0 0 var(--sheet);transition:transform .45s ease-in,visibility 0s .45s;padding:18px 16px calc(env(safe-area-inset-bottom,0px) + 16px);max-width:640px;margin:0 auto}
+.open #back{opacity:1;pointer-events:auto}.open #sheet{transform:none;visibility:visible;transition:transform .85s cubic-bezier(.25,1.2,.4,1),visibility 0s}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.top b{font-size:16px}
+.x{border:0;background:none;color:var(--sub);font-size:22px;cursor:pointer}
+.hint{margin:0 0 12px;font-size:13px;line-height:1.55;color:var(--sub)}
+.mailrow{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--card);border-radius:22px;padding:10px 12px 10px 18px}
+.mailrow a{font-size:14px;color:var(--blue);text-decoration:none;word-break:break-all}
+.mailrow button{border:0;border-radius:999px;padding:8px 16px;background:var(--blue);color:#fff;font-size:12px;font-weight:700;cursor:pointer;flex-shrink:0;transition:transform .6s var(--spring)}
+.mailrow button:active{transform:scale(.86)}
+@supports (animation-timing-function:linear(0,1)){:root{--spring:linear(0,.009,.035 2.1%,.141,.281 6.7%,.723 12.9%,.938 16.7%,1.017,1.077,1.121,1.149 24.3%,1.159,1.163,1.161,1.154 29.9%,1.129 32.8%,1.051 39.6%,1.017 43.1%,.991,.977 51%,.974 53.8%,.975 57.1%,.997 69.8%,1.003 76.9%,1.004 83.8%,1)}}
+@keyframes rise{from{opacity:0;transform:translateY(90px) scale(.85)}to{opacity:1;transform:none}}
+@keyframes pop{from{transform:scale(.72)}to{transform:scale(1)}}
+@keyframes bump{from{transform:scale(1.3,.75)}to{transform:none}}
+@keyframes itemIn{from{opacity:0;transform:translateY(60px) scale(.88)}to{opacity:1;transform:none}}
+.card.enter,.rules{animation:rise 1.1s var(--spring) both;animation-delay:calc(min(var(--i,0),4)*130ms)}
+.rules+.rules{animation-delay:.12s}
+header>h1,header>p{animation:rise 1s var(--spring) both}
+header>p+p{animation-delay:.08s}
+.anim .item{animation:itemIn .9s var(--spring) both}
+.anim .item:nth-child(2){animation-delay:.1s}.anim .item:nth-child(3){animation-delay:.2s}.anim .item:nth-child(4){animation-delay:.3s}
+.add.pop{animation:pop .9s var(--spring)}
+.item.out{opacity:0;transform:scale(.7) translateX(60px) rotate(3deg);height:0!important;padding-top:0;padding-bottom:0;margin-bottom:-10px;overflow:hidden;pointer-events:none;transition:opacity .3s ease,transform .45s cubic-bezier(.5,-.3,.7,.3),height .45s .08s ease,padding .45s .08s ease,margin .45s .08s ease}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+#lw{position:relative;flex:1;min-height:0;display:flex;flex-direction:column}
+#list::-webkit-scrollbar{display:none}
+
+
+#list{overflow:auto;flex:1;display:grid;gap:10px;align-content:start;padding:30px 0;scrollbar-width:none;-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 30px,#000 calc(100% - 30px),transparent 100%);mask-image:linear-gradient(to bottom,transparent 0,#000 30px,#000 calc(100% - 30px),transparent 100%)}
+.item{white-space:pre-line;background:var(--card);border-radius:22px;padding:12px 14px;font-size:13px;line-height:1.6;position:relative}
+.item b{display:block;font-size:14px;padding-right:34px}
+.item .rm{position:absolute;top:10px;right:10px;width:28px;height:28px;border-radius:50%;border:0;background:var(--line);color:var(--text);display:grid;place-items:center;padding:0;cursor:pointer}
+.copy{margin-top:12px;width:100%;border:0;border-radius:999px;padding:15px;background:var(--blue);color:#fff;font-size:14px;font-weight:700;cursor:pointer}
+.empty{color:var(--sub);text-align:center;padding:30px 0;font-size:14px}
+</style>
+</head>
+<body>
+<header>
+<h1>Hello! Welcome to KMT’s List!</h1>
+<p>I am currently obsessed with Korean musical actors and collecting Korean recordings! Because Korean actors are so talented and handsome!</p>
+<p>Right now, I am only collecting videos featuring Korean actors and have stopped collecting international videos for the time being! So I am only trading all of my videos for Korean recordings!</p>
+<div class="card rules">
+<div class="rt">Contacts</div>
+<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:8px"><a href="mailto:KMTMusical@proton.me" style="font-size:14px;color:var(--blue);text-decoration:none;word-break:break-all">KMTMusical@proton.me</a><button id="cpmail" style="border:0;border-radius:999px;padding:8px 16px;background:var(--blue);color:#fff;font-size:12px;font-weight:700;cursor:pointer;flex-shrink:0">COPY</button></div>
+</div>
+<div class="card rules">
+<div class="rt">Rules &amp; Guidelines</div>
+<ol>
+<li>Whoever initiates the trade <b>must send their link first</b>.</li>
+<li>When requesting a trade, please make sure to <b>send your full list</b>.</li>
+<li>I am very busy these days, so I might miss your email or DM! <b>Please don’t rush me</b>, and if you don’t hear back <b>after 3 days</b>, feel free to message me again.</li>
+<li>I <b>NEVER accept videos ripped from Bilibili</b>! Videos encoded from Bilibili have terrible quality, and I think videos you can easily get with just a few searches aren’t even worth trading for!</li>
+<li>As mentioned above, I am currently not collecting non-Korean videos, so all videos on my list are <b>ONLY traded for Korean videos</b>!</li>
+<li>When declining a trade, please <b>state your decision clearly</b>! Otherwise, I’ll be left waiting indefinitely. Even just a super short two-letter “no” is totally fine, so please make sure to clearly let me know if you are declining!</li>
+<li>I <b>NEVER want to trade with rude people</b>. It’s basic common sense, so please <b>always be polite</b>!</li>
+<li>If you spot any incorrect information on my list, please feel free to <b>let me know anytime</b>!</li>
+<li><b>Never upload the videos you get from trading with me to social media</b>!</li>
+<li><b>Never ask for NFT videos</b>!</li>
+<li>Please trade any Korean videos you get from me <b>only for other Korean videos</b>. When adding them to your list, please make sure to <b>state this clearly</b>!</li>
+<li>Videos <b>larger than 20GB</b> have their file size listed separately! Any video without a listed size is <b>under 20GB</b>, but if you’re curious about the file size, please feel free to ask me!</li>
+<li>Korean musical videos don’t have a “master” concept, so there are <b>no original notes</b> provided by whoever filmed them! Because of that, I sometimes edit the notes however I see fit. If you’d rather not have that and want me to <b>copy and paste the notes from your list exactly as they are</b>, just let me know anytime!</li>
+<li>You’re welcome to copy the notes on my list as they are, but if you’d rather not, you don’t have to! (However, <b>the statement that I only trade for Korean videos and the trade ratio must be kept</b>. If you’d like to change the trade ratio, you may <b>only change it to the ratio I’ve set or higher</b>, in order to preserve the rarity of the material.)</li>
+<li>My list’s UI/UX is <b>optimized for mobile</b>! It isn’t optimized for PC screens, but <b>all of the features work just fine</b>!</li>
+<li><b>Korean videos filmed in 2024 or later will only be traded for videos on my Want List</b>! Thank you for understanding!</li>
+</ol>
+</div>
+<div class="card rules">
+<div class="rt">Want List</div>
+<div style="margin-top:8px;font-size:13.5px;line-height:1.6">I’m willing to trade for most Korean musical videos, but I prefer the videos listed below!</div>
+<ul>
+<li>Dear Evan Hansen (디어 에반 핸슨)</li>
+<li>Death Note (데스노트)</li>
+<li>Elisabeth (엘리자벳)</li>
+<li>Jekyll &amp; Hyde (지킬 앤 하이드)</li>
+<li>The Last Kiss (더 라스트 키스)</li>
+<li>Lempicka (렘피카)</li>
+<li>Paganini (파가니니)</li>
+<li>Rebecca (레베카)</li>
+<li>Seopyeonje (서편제)</li>
+<li>Wicked (위키드)</li>
+</ul>
+</div>
+<div id="sw"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input id="q" type="search" placeholder="Search" autocomplete="off"></div>
+</header>
+<main id="cards"></main>
+
+<button id="bubble" aria-label="Trade list"><span>SELECTED</span><span class="n" id="count">0</span></button>
+<div id="back"></div>
+<div id="sheet">
+  <div class="top"><b>Selected</b><button class="x" id="close" aria-label="Close">×</button></div>
+  <p class="hint">Copy your selected videos below and send them to me at KMTMusical@proton.me along with your full list!</p>
+  <div class="mailrow"><a href="mailto:KMTMusical@proton.me">KMTMusical@proton.me</a><button id="cpmail2">COPY</button></div>
+  <div id="lw"><div id="list"></div></div>
+  <button class="copy" id="copy">TAP TO COPY ALL</button>
+</div>
+
+<script>
+const ITEMS=[
+{id:1,title:"Beethoven",place:"Korea",date:"July 12, 2026 MP4",cast:"홍광호 Kwang-ho Hong (Ludwig van Beethoven), 윤공주 Gong-joo Yoon (Antonie Brentano), 김도현 Do-hyun Kim (Kaspar van Beethoven), 박시원 Si-won Park (Kaspar van Beethoven), 유연정 Yeon-jung Yoo (Bettina Brentano)",note:"Notes: Only trading for Korean videos! (Trade Ratio 3:1)"},
+{id:31,title:"Dear Evan Hansen",place:"Korea",date:"June 11, 2024 MP4 (95.39GB)",cast:"박강현 Kang-hyun Park (Evan Hansen), 김선영 Sun-young Kim (Heidi Hansen), 임지섭 Ji-seop Im (Connor Murphy), 홍서영 Seo-young Hong (Zoe Murphy), 장현성 Hyun-sung Jang (Larry Murphy), 한유란 Yu-ran Han (Cynthia Murphy)",note:"Notes: This is a 4K video with truly outstanding picture quality! Park Kang-hyun’s portrayal of Evan especially fits the role perfectly!\nOnly trading for Korean videos! (Trade Ratio 3:1)"},
+{id:2,title:"Death Note",place:"Korea",date:"April 01, 2026 M2TS (25.3GB)",cast:"고은성 Eun-sung Ko (Light Yagami), 김준수 Junsu Kim (L), 장은아 Eun-ah Jang (Rem), 임정모 Jung-mo Lim (Ryuk), 장민제 Min-je Jang (Misa Amane)",note:"Notes: I’d prefer to keep this video to myself if at all possible! Unless it’s a video I’ve been truly desperate to get, I won’t be using it for trades. I hope you’ll be understanding about it!\nOnly trading for Korean videos! (Trade Ratio 4:1)"},
+{id:3,title:"Death Note",place:"Korea",date:"November 26, 2025 MP4",cast:"임규형 Gyu-hyung Lim (Light Yagami), 산들 Sandeul (L), 장은아 Eun-ah Jang (Rem), 양승리 Seung-ri Yang (Ryuk), 최서연 Seo-yeon Choi (Misa Amane), 윤영석 Young-seok Yoon (Soichiro Yagami)",note:"Notes: Only trading for Korean videos! (Trade Ratio 3:1)"},
+{id:4,title:"Death Note",place:"Korea",date:"June 09, 2023 MP4",cast:"홍광호 Kwang-ho Hong (Light Yagami), 김준수 Junsu Kim (L), 장은아 Eun-ah Jang (Rem), 장지후 Ji-hoo Jang (Ryuk), 장민제 Min-je Jang (Misa Amane)",note:"Notes: Fantastic 4K-level quality video. Mostly focused on Hong Kwang-ho. On a personal note, Hong Kwang-ho looks seriously handsome in this.\nOnly trading for Korean videos! (Trade Ratio 3:1)"},
+{id:5,title:"Death Note",place:"Korea",date:"August 14, 2022 M2TS (26.1GB)",cast:"홍광호 Kwang-ho Hong (Light Yagami), 김준수 Junsu Kim (L), 서경수 Kyung-soo Seo (Ryuk), 장은아 Eun-ah Jang (Rem), 장민제 Min-je Jang (Misa Amane)",note:"Notes: Only trading for Korean videos!"},
+{id:6,title:"Death Note",place:"Korea",date:"August 13, 2022 Matinee M2TS (26.1GB)",cast:"고은성 Eun-sung Ko (Light Yagami), 김성철 Sung-cheol Kim (L), 서경수 Kyung-soo Seo (Ryuk), 장은아 Eun-ah Jang (Rem), 장민제 Min-je Jang (Misa Amane)",note:"Notes: Only trading for Korean videos!"},
+{id:33,title:"Death Note",place:"Korea",date:"January 26, 2017 M2TS (23.12GB)",cast:"한지상 Han Ji-Sang (Light Yagami), 김준수 Kim Jun-su (L), 강홍석 Kang Hong-seok (Ryuk), 박혜나 Park Hye-na (Rem), 이은영 BEN (Misa Amane), 이수빈 Lee Soo-bin (Sayu Yagami)",note:"Notes: Only trading for Korean videos! (Trade Ratio 2:1)"},
+{id:7,title:"Death Note",place:"Korea",date:"July 07, 2015 MP4",cast:"홍광호 Kwang-ho Hong (Light Yagami), 김준수 Junsu Kim (L), 강홍석 Hong-seok Kang (Ryuk), 박혜나 Hye-na Park (Rem), 정선아 Sun-ah Jeong (Misa Amane)",note:"Notes: Footage of the legendary 2015 cast of Death Note. It is split into 28 parts, and in my opinion, it has the best capture quality among all the 2015 Korean Death Note bootlegs currently in circulation!\nOnly trading for Korean videos!"},
+{id:32,title:"Dracula",place:"Korea",date:"January 19, 2024 M2TS",cast:"신성록 Shin Sung-rok (Dracula), 정선아 Jeong Sun-ah (Mina), 박재윤 Park Jae-yoon (Van Helsing), 진태화 Jin Tae-hwa (Jonathan), 이예은 Lee Ye-eun (Lucy), 김도하 Kim Do-ha (Renfield), 이재현 Lee Jae-hyun (Jack Seward), 이호진 Lee Ho-jin (Arthur Holmwood), 민준호 Min Jun-ho (Quincey Morris)",note:"Notes: Includes curtain call. Not listed on encora (and this should go without saying but PLEASE DO NOT add any Korean recordings if isn’t already there to encora).\nOnly trading for other Korean videos."},
+{id:34,title:"Dracula",place:"Korea",date:"July 16, 2021 MP4",cast:"전동석 Dong-suk Jeon (Dracula), 임혜영 Hye-young Lim (Mina), 손준호 Jun-ho Son (Van Helsing), 조성윤 Sung-yoon Jo (Jonathan Harker)",note:"Notes: Great 4K video quality!\nOnly trading for Korean videos! (Trade Ratio 2:1)"},
+{id:8,title:"Elisabeth",place:"Korea",date:"November 02, 2022 MP4 (59.5GB)",cast:"이지혜 Ji-hye Lee (Elisabeth), 신성록 Sung-rok Shin (Tod), 박은태 Eun-tae Park (Luigi Lucheni), 길병민 Byung-min Gil (Emperor Franz Joseph)",note:"Notes: Gorgeous 4K video quality, and the filming itself is pretty decent.\nOnly trading for Korean videos! (Trade Ratio 3:1)"},
+{id:9,locked:true,title:"Elisabeth",place:"Korea",date:"September 16, 2022 MP4",cast:"이지혜 Ji-hye Lee (Elisabeth), 김준수 Junsu Kim (Tod), 박은태 Eun-tae Park (Luigi Lucheni), 민영기 Young-ki Min (Emperor Franz Joseph)",note:"Notes: Looking for the original file of this video. It appears someone maliciously compressed it down to 720p, and from what I know, the original is in 4K.\nSince this is definitely not the original file, I no longer wish to share this video."},
+{id:10,title:"Elisabeth",place:"Korea",date:"December 25, 2018 M2TS (21.1GB)",cast:"신영숙 Young-sook Shin (Elisabeth), 박형식 Hyung-sik Park (Tod), 박강현 Kang-hyun Park (Luigi Lucheni), 손준호 Jun-ho Son (Emperor Franz Joseph)",note:"Notes: Only trading for Korean videos!"},
+{id:11,title:"Elisabeth",place:"Korea",date:"December 13, 2018 M2TS (23.3GB)",cast:"김소현 So-hyun Kim (Elisabeth), 김준수 Junsu Kim (Tod), 강홍석 Hong-seok Kang (Luigi Lucheni), 손준호 Jun-ho Son (Emperor Franz Joseph)",note:"Notes: Only trading for Korean videos!"},
+{id:12,title:"Frankenstein",place:"Korea",date:"July 07, 2024 MP4",cast:"신성록 Sung-rok Shin (Victor Frankenstein), 고은성 Eun-sung Ko (Henri Dupre / The Creature), 최지혜 Ji-hye Choi (Julia), 장은아 Eun-ah Jang (Ellen), 이희정 Hee-jung Lee (Stefan)",note:"Notes: Truly fantastic filming in 4K! The camerawork is also amazing, and Ko Eun-sung is still as handsome as ever!\nOnly trading for Korean videos! (Trade Ratio 3:1)"},
+{id:13,title:"Hadestown",place:"Korea",date:"September 24, 2021 M2TS",cast:"조형균 Hyung-gyun Jo (Orpheus), 최재림 Jae-rim Choi (Hermes), 박혜나 Hye-na Park (Persephone), 김환희 Hwan-hee Kim (Eurydice)",note:"Notes: Only trading for Korean videos! (Trade Ratio 2:1)"},
+{id:14,title:"Hadestown",place:"Korea",date:"September 22, 2021 M2TS",cast:"박강현 Kang-hyun Park (Orpheus), 강홍석 Hong-seok Kang (Hermes), 김선영 Sun-young Kim (Persephone), 김수하 Su-ha Kim (Eurydice)",note:"Notes: Only trading for Korean videos! (Trade Ratio 2:1)"},
+{id:15,title:"Hero",place:"Korea",date:"January 15, 2023 MP4",cast:"정성화 Sung-hwa Jung (안중근 Ahn Jung-geun), 최민철 Min-chul Choi (이토 히로부미 Ito Hirobumi), 린지 Linzy (설희 Seol-hee)",note:"Notes: Truly fantastic filming with 4K-level quality! The story is set during the Japanese colonial period in Korea, and out of all the Korean bootlegs I’ve seen so far, this one has by far the best picture quality!\nOnly trading for Korean videos! (Trade Ratio 3:1)"},
+{id:16,title:"Hero",place:"Korea",date:"January 12, 2023 MP4",cast:"민우혁 Woo-hyuk Min (안중근 Ahn Jung-geun), 최민철 Min-chul Choi (이토 히로부미 Ito Hirobumi), 정재은 Jae-eun Jung (설희 Seol-hee)",note:"Notes: Truly gorgeous 4K-level filming!\nOnly trading for Korean videos! (Trade Ratio 3:1)"},
+{id:17,title:"Jekyll & Hyde",place:"Korea",date:"January 12, 2025 MP4",cast:"김성철 Sung-cheol Kim (Henry Jekyll / Edward Hyde), 김환희 Hwan-hee Kim (Lucy Harris), 최수진 Soo-jin Choi (Emma Carew)",note:"Notes: Fantastic 4K-level quality video! The filming and zooms are especially great, and the colors are gorgeous! Plus, Kim Sung-cheol’s acting and vocals are truly legendary, and he looks so handsome!\nOnly trading for Korean videos! (Trade Ratio 4:1)"},
+{id:18,title:"Les Misérables",place:"Korea",date:"December 06, 2023 M2TS",cast:"최재림 Jae-rim Choi (Jean Valjean), 카이 Kai (Javert), 조정은 Jung-eun Jo (Fantine), 김영주 Young-joo Kim (Madame Thénardier), 김성식 Sung-sik Kim (Enjolras), 김수하 Su-ha Kim (Éponine)",note:"Notes: Perhaps because the staging of Les Misérables is quite dark to begin with, the video is also quite dark—though definitely still watchable!\nOnly trading for Korean videos!"},
+{id:19,title:"Maybe Happy Ending",place:"Korea",date:"November 12, 2017 MP4",cast:"정문성 Moon-sung Jung (Oliver), 전미도 Mi-do Jeon (Claire), 성종완 Jong-wan Sung (James)",note:"Notes: Only trading for Korean videos!"},
+{id:20,title:"Moulin Rouge!",place:"Korea",date:"December 20, 2022 MKV",cast:"홍광호 Kwang-ho Hong (Christian), 김지우 Ji-woo Kim (Satine), 이창용 Chang-yong Lee (Harold Zidler), 이정열 Jung-yeol Lee (Toulouse-Lautrec)",note:"Notes: Truly fantastic 4K-level video!\nOnly trading for Korean videos! (Trade Ratio 3:1)"},
+{id:21,title:"Rebecca",place:"Korea",date:"December 14, 2023 MP4",cast:"이지혜 Lee Ji hye (Ich), 옥주현 Ock Joo Hyun (Mrs Danvers), 민영기 Min Young ki (Maxim), 윤석원 Yoon Seok won (Jack Favell), 김지선 Kim Ji Sun (Mrs Van Hopper)",note:"Notes: Opening night of the encore run for the musical Rebecca. Truly fantastic 4K-level quality! The camerawork is genuinely impressive. Perhaps because this encore run followed right after the 10th-anniversary production, the cast’s performances are already beyond reproach—absolutely flawless despite it being the very first show!\nOnly trading for Korean videos! (Trade Ratio 3:1)"},
+{id:22,title:"Rebecca",place:"Korea",date:"September 20, 2023 M2TS",cast:"리사 Lisa (Mrs. Danvers), 테이 Tei (Maxim de Winter), 이지혜 Lee Ji-hye (Ich), 임정모 Im Jung-mo (Jack Favell), 윤사봉 Yoon Sa-bong (Mrs. Van Hopper)",note:"Notes: During the final scene, the filming cuts out a couple of times before resuming.\nOnly trading for Korean videos! (Trade Ratio 3:1)"},
+{id:23,title:"Rebecca",place:"Korea",date:"September 06, 2023 M2TS",cast:"류정한 Jung-han Ryu (Maxim de Winter), 웬디 Wendy (I / Ich), 장은아 Eun-ah Jang (Mrs. Danvers), 임정모 Jung-mo Lim (Jack Favell), 윤사봉 Sa-bong Yoon (Mrs. Van Hopper)",note:"Notes: Only trading for Korean videos! (Trade Ratio 3:1)"},
+{id:24,title:"Rebecca",place:"Korea",date:"January 29, 2020 M2TS (22.78GB)",cast:"카이 Kai (Maxim de Winter), 옥주현 Joo-hyun Ock (Mrs. Danvers), 이지혜 Ji-hye Lee (I / Ich), 최민철 Min-chul Choi (Jack Favell), 최혁주 Hyuk-joo Choi (Mrs. Van Hopper)",note:"Notes: English subtitles included.\nOnly trading for Korean videos!"},
+{id:25,title:"Sweeney Todd",place:"Korea",date:"November 22, 2019 MP4",cast:"조승우 Seung-woo Cho (Sweeney Todd), 옥주현 Joo-hyun Ock (Mrs. Lovett), 서영주 Young-joo Seo (Judge Turpin), 신재범 Jae-bum Shin (Anthony Hope), 이지수 Ji-soo Lee (Johanna)",note:"Notes: Mostly focused on Cho Seung-woo. I watched this without knowing what Sweeney Todd was about… um… it’s gruesome.\nOnly trading for Korean videos!"},
+{id:26,locked:true,title:"The Man in Hanbok",place:"Korea",date:"December 03, 2025 MP4",cast:"박은태 Eun-tae Park (Jang Yeong-sil / Kang Bae), 이규형 Kyu-hyung Lee (King Sejong / Jin-seok), 민영기 Young-ki Min (Jeong In-ji), 최지혜 Ji-hye Choi (Hwa-in / Elena)",note:"Notes: It looks like someone maliciously compressed this down to 720p!! Seriously, why do people do this? I’m also ISO (In Search Of) the original file for this one—from what I know, the original is 1080p.\nSince this is definitely not the original file, I no longer wish to share this video."},
+{id:27,title:"The Man Who Laughs",place:"Korea",date:"January 23, 2025 MP4 (65.7GB)",cast:"박은태 Eun-tae Park (Gwynplaine), 민영기 Young-ki Min (Ursus), 이수빈 Soo-bin Lee (Dea), 리사 Lisa (Duchess Josiana), 강태을 Tae-eul Kang (David Dirry-Moir), 문성혁 Sung-hyuk Moon (Pedro), 김지선 Ji-sun Kim (Queen Anne)",note:"Notes: True 4K capture with insane quality! The picture is genuinely dazzling—so crisp and gorgeous!\nOnly trading for Korean videos! (Trade Ratio 4:1)"},
+{id:28,title:"The Phantom of the Opera",place:"Korea",date:"September 01, 2023 M2TS",cast:"조승우 Seung-woo Cho (The Phantom), 손지수 Ji-soo Son (Christine Daaé), 황건하 Geon-ha Hwang (Raoul), 이지영 Ji-young Lee (Carlotta Giudicelli)",note:"Notes: Only trading for Korean videos!"},
+{id:29,title:"Wicked",place:"Korea",date:"March 30, 2021 MP4",cast:"옥주현 Joo-hyun Ock (Elphaba), 정선아 Sun-ah Jeong (Glinda), 서경수 Kyung-soo Seo (Fiyero), 남경주 Kyung-joo Nam (The Wizard)",note:"Notes: Amazing 4K-level quality! Out of all the Korean Wicked captures currently in circulation, this one easily has the best picture quality, and the camerawork is fantastic as well!\nOnly trading for Korean videos! (Trade Ratio 3:1)"},
+{id:30,title:"Wicked",place:"Korea",date:"August 27, 2016 MP4",cast:"박혜나 Hye-na Park (Elphaba), 아이비 Ivy (Glinda), 고은성 Eun-sung Ko (Fiyero), 이상준 Sang-joon Lee (The Wizard)",note:"Notes: Only trading for Korean videos!"}
+];
+let sel=[],query='',first=true,lastN=0,lastKey='';
+const $=id=>document.getElementById(id);
+const fd=d=>d.replace(/ (MP4|M2TS|MKV)/,' \u2022 $1');
+const fp=d=>d.replace(/ (MP4|M2TS|MKV)/,' | $1');
+const txt=i=>`${i.title} | ${i.place} | ${fp(i.date)}${i.note?'\n'+i.note:''}`;
+
+function renderCards(){
+  const shown=ITEMS.filter(i=>(i.title+' '+i.place+' '+i.date+' '+i.cast).toLowerCase().includes(query));
+  const key=shown.map(i=>i.id).join();const anim=first;lastKey=key;
+  $('cards').innerHTML=shown.map((i,idx)=>`<div class="card ${anim?'enter':''}" style="--i:${Math.min(idx,3)}"><div class="title">${i.title}</div><div class="meta">${i.place} • ${fd(i.date)}</div><p class="cast"><b>Cast:</b> ${i.cast}</p>${i.note?`<p class="note">${i.note}</p>`:''}${i.locked?'<button class="add lock" disabled>UNAVAILABLE</button>':`<button class="add ${sel.includes(i.id)?'on':''}" data-id="${i.id}">${sel.includes(i.id)?'ADDED ✓':'ADD TO TRADE'}</button>`}</div>`).join('')||'<div class="empty">No results.</div>';
+  first=false;
+}
+function renderSheet(){
+  const items=ITEMS.filter(i=>sel.includes(i.id));
+  $('list').innerHTML=items.length?items.map(i=>`<div class="item"><button class="rm" data-rm="${i.id}" aria-label="Remove"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" style="pointer-events:none"><path d="M5 5l14 14M19 5L5 19"/></svg></button><b>${i.title} | ${i.place} | ${fp(i.date)}</b>Cast: ${i.cast}${i.note?'<br>'+i.note:''}</div>`).join(''):'<div class="empty">Nothing added yet.</div>';
+  $('copy').style.display=items.length?'block':'none';
+}
+function update(){
+  $('count').textContent=sel.length;
+  if(sel.length!==lastN){lastN=sel.length;const bb=$('bubble');bb.classList.remove('bump');void bb.offsetWidth;bb.classList.add('bump')}
+  $('bubble').classList.toggle('on',sel.length>0);
+  renderCards();renderSheet();
+}
+$('cards').addEventListener('click',e=>{
+  const b=e.target.closest('.add');if(!b)return;
+  const id=+b.dataset.id;
+  sel=sel.includes(id)?sel.filter(x=>x!==id):[...sel,id];
+  update();
+  const nb=document.querySelector('.add[data-id="'+id+'"]');if(nb)nb.classList.add('pop');
+});
+$('list').addEventListener('click',e=>{
+  const r=e.target.closest('.rm');if(!r)return;
+  const it=r.closest('.item');if(it.classList.contains('out'))return;
+  const id=+r.dataset.rm;
+  it.style.height=it.offsetHeight+'px';void it.offsetHeight;
+  it.classList.add('out');
+  setTimeout(()=>{sel=sel.filter(x=>x!==id);update()},520);
+});
+const open=v=>document.body.classList.toggle('open',v);
+$('bubble').onclick=()=>{open(true);const l=$('list');l.classList.add('anim');setTimeout(()=>l.classList.remove('anim'),900)};
+$('close').onclick=()=>open(false);
+$('back').onclick=()=>open(false);
+$('copy').onclick=async()=>{
+  const t=ITEMS.filter(i=>sel.includes(i.id)).map(txt).join('\n\n');
+  let ok=false;
+  try{await navigator.clipboard.writeText(t);ok=true}catch(e){}
+  if(!ok){
+    const a=document.createElement('textarea');a.value=t;a.style.position='fixed';a.style.opacity='0';
+    document.body.appendChild(a);a.select();
+    try{ok=document.execCommand('copy')}catch(e){}
+    a.remove();
+  }
+  $('copy').textContent=ok?'COPIED ✓':'COPY FAILED – SELECT MANUALLY';
+  setTimeout(()=>$('copy').textContent='TAP TO COPY ALL',1600);
+};
+$('q').addEventListener('input',e=>{query=e.target.value.trim().toLowerCase();renderCards()});
+$('cpmail').onclick=async()=>{
+  const t='KMTMusical@proton.me';let ok=false;
+  try{await navigator.clipboard.writeText(t);ok=true}catch(e){}
+  if(!ok){const a=document.createElement('textarea');a.value=t;a.style.position='fixed';a.style.opacity='0';document.body.appendChild(a);a.select();try{ok=document.execCommand('copy')}catch(e){}a.remove()}
+  $('cpmail').textContent=ok?'COPIED ✓':'FAILED';
+  setTimeout(()=>$('cpmail').textContent='COPY',1600);
+};
+$('cpmail2').onclick=async()=>{
+  const b=$('cpmail2'),t='KMTMusical@proton.me';let ok=false;
+  try{await navigator.clipboard.writeText(t);ok=true}catch(e){}
+  if(!ok){const a=document.createElement('textarea');a.value=t;a.style.position='fixed';a.style.opacity='0';document.body.appendChild(a);a.select();try{ok=document.execCommand('copy')}catch(e){}a.remove()}
+  b.textContent=ok?'COPIED ✓':'FAILED';
+  setTimeout(()=>b.textContent='COPY',1600);
+};
+update();
+</script>
+</body>
+</html>
